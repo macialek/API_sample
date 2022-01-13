@@ -19,4 +19,4 @@ fastAPI + OpenTelemetry + Prometheus + JAEGER + CORS
 ## Enviroment creation
 ```poetry install```
 ## Running api only inside enviroment
-```poetry run uvicorn --host=0.0.0.0 --port=8000 app.api:app
+```poetry run uvicorn --host=0.0.0.0 --port=8000 app.api:app```

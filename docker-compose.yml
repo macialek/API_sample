@@ -1,0 +1,68 @@
+version: '3.9'
+services:
+  
+  # fastAPI application
+  sample_fastapi:
+    # volumes:
+    #   - ./:/app
+    environment:
+      VERSION: local-compose
+    container_name: sample_fastapi
+    # image: docker.io/library/sample_fastapi
+    build:
+      context: .
+      target: production
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - otel-collector
+
+  # Jaeger
+  jaeger:
+    image: jaegertracing/all-in-one:1.30
+    container_name: jaeger
+    ports:
+      # - 6831:6831/udp # accept jaeger.thrift over compact thrift protocol
+      # - 5778:5778 # serve configs
+      - 16686:16686 # WWW interface
+      - 14250:14250 # accept model.proto
+      # - 14268:14268 # accept jaeger.thrift directly from clients
+      - 14269:14269 # metrics and healthcheck
+    healthcheck:
+      test: ["CMD", "curl", "-X", "GET", "localhost:14269/health"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+      start_period: 40s
+
+  # Prometheus
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:v2.32.1
+    volumes:
+      - ./config/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  # OTEL Collector
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: otel_collector
+    command: ["--config=/etc/otel_collector_config.yaml"]
+    volumes:
+      - ./config/otel_collector_config.yaml:/etc/otel_collector_config.yaml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "13133:13133" # health_check extension
+      - "4317:4317"   # OTLP gRPC receiver
+      - "55670:55679" # zpages extension
+    depends_on:
+      - jaeger

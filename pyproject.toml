@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "sample_fastapi"
+version = "1.0.0"
+description = "Sample fastAPI usage"
+authors = ["Maciej Michałek"]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.71.0"
+ujson = "^5.1.0"
+uvicorn = "^0.16.0"
+requests = "^2.27.1"
+python-json-logger = "^2.0.2"
+prometheus-fastapi-instrumentator = "^5.7.1"
+python-multipart = "^0.0.5"
+uvloop = "^0.16.0"
+six = "^1.16.0"
+httptools = "^0.3.0"
+opentelemetry-api = "^1.8.0"
+opentelemetry-sdk = "^1.8.0"
+opentelemetry-instrumentation-fastapi = "^0.27b0"
+opentelemetry-exporter-otlp = "^1.8.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+pytest-dependency = "^0.5.1"
+pytest-cov = "^3.0.0"
+flake8 = "^4.0.1"
+autopep8 = "^1.6.0"
+black = "^21.12b0"
+Sphinx = "^4.3.2"
+sphinx-autoapi = "^1.8.4"
+sphinx-rtd-theme = "^1.0.0"
+recommonmark = "^0.7.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
